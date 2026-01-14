@@ -1,5 +1,5 @@
-#include <stdio.h>
 #include <assert.h>
+#include <stdio.h>
 
 #include "part3.h"
 
@@ -15,30 +15,29 @@ extern void free_node(struct list_node *node);
 // the second field is 'next'):
 //
 // |---------|      |---------|
-// |    0    |  /-> |    2    | 
-// |---------| /    |---------| 
-// |       ----     |   NULL  | 
+// |    0    |  /-> |    2    |
+// |---------| /    |---------|
+// |       ----     |   NULL  |
 // |---------|      |---------|
-// 
+//
 // If the head node pointer refers to the node with the value 0,
 // and list_insert(head, 1) is called, then the linked list
 // structure after the list_insert call should be as follows:
 //
 // |---------|      |---------|      |---------|
-// |    0    |  /-> |    1    |  /-> |    2    |  
-// |---------| /    |---------| /    |---------| 
+// |    0    |  /-> |    1    |  /-> |    2    |
+// |---------| /    |---------| /    |---------|
 // |       ----     |       ----     |  NULL   |
 // |---------|      |---------|      |---------|
 //
 // Use alloc_node to create a new node.  Don't forget to set its
 // value!
-void
-list_insert(struct list_node *head, int value)
-{
-	assert(head != NULL);
-
-	// TODO: Your code here.
-	assert(0);
+void list_insert(struct list_node *head, int value) {
+  assert(head != NULL);
+  struct list_node *new_node = alloc_node();
+  new_node->value = value;
+  new_node->next = head->next;
+  head->next = new_node;
 }
 
 // Return a pointer to the last node in a linked list, starting
@@ -49,22 +48,25 @@ list_insert(struct list_node *head, int value)
 // As an example, consider the following linked list:
 //
 // |---------|      |---------|      |---------|
-// |    0    |  /-> |    1    |  /-> |    2    |  
-// |---------| /    |---------| /    |---------| 
+// |    0    |  /-> |    1    |  /-> |    2    |
+// |---------| /    |---------| /    |---------|
 // |       ----     |       ----     |  NULL   |
 // |---------|      |---------|      |---------|
 //
 // If the head node pointer refers to the node with the value 0,
 // list_end(head) should return a pointer to the node with the
 // value of 2.
-struct list_node *
-list_end(struct list_node *head)
-{
-	assert(head != NULL);
+struct list_node *list_end(struct list_node *head) {
+  assert(head != NULL);
 
-	// TODO: Your code here.
-	assert(0);
-	return NULL;
+  if (head->next == NULL) {
+    return head;
+  }
+
+  while (head->next != NULL) {
+    head = head->next;
+  }
+  return head;
 }
 
 // Return the number of nodes in a linked list, starting from the
@@ -74,8 +76,8 @@ list_end(struct list_node *head)
 // As an example, consider the following linked list:
 //
 // |---------|      |---------|      |---------|
-// |    0    |  /-> |    1    |  /-> |    2    |  
-// |---------| /    |---------| /    |---------| 
+// |    0    |  /-> |    1    |  /-> |    2    |
+// |---------| /    |---------| /    |---------|
 // |       ----     |       ----     |   NULL  |
 // |---------|      |---------|      |---------|
 //
@@ -83,14 +85,15 @@ list_end(struct list_node *head)
 // list_size(head) should return 3.  If the head node pointer
 // refers to the node with the value 1, list_size(head) should
 // return 2.
-int
-list_size(struct list_node *head)
-{
-	assert(head != NULL);
+int list_size(struct list_node *head) {
+  assert(head != NULL);
 
-	// TODO: Your code here.
-	assert(0);
-	return 0;
+  int count = 1;
+  while (head->next != NULL) {
+    count++;
+    head = head->next;
+  }
+  return count;
 }
 
 // Return a pointer to the first node in the given linked list
@@ -101,8 +104,8 @@ list_size(struct list_node *head)
 // As an example, consider the following linked list:
 //
 // |---------|      |---------|      |---------|
-// |    0    |  /-> |    1    |  /-> |    2    |  
-// |---------| /    |---------| /    |---------| 
+// |    0    |  /-> |    1    |  /-> |    2    |
+// |---------| /    |---------| /    |---------|
 // |       ----     |       ----     |   NULL  |
 // |---------|      |---------|      |---------|
 //
@@ -114,15 +117,25 @@ list_size(struct list_node *head)
 //
 // If the head node contains the sought-after value, then the predecessor
 // pointer should be set to NULL.
-struct list_node *
-list_find(struct list_node *head, int value, struct list_node **predp)
-{
-	assert(head != NULL);
-	assert(predp != NULL);
+struct list_node *list_find(struct list_node *head, int value,
+                            struct list_node **predp) {
+  assert(head != NULL);
+  assert(predp != NULL);
 
-	// TODO: Your code here.
-	assert(0);
-	return NULL;
+  if (head->value == value) {
+    *predp = NULL;
+    return head;
+  }
+
+  while (head->next != NULL) {
+    if (head->next->value == value) {
+      *predp = head;
+      return head->next;
+    }
+    head = head->next;
+  }
+  *predp = NULL;
+  return NULL;
 }
 
 // Remove a node from the given linked list (starting at the given head)
@@ -140,8 +153,8 @@ list_find(struct list_node *head, int value, struct list_node **predp)
 // As an example, consider the following linked list:
 //
 // |---------|      |---------|      |---------|
-// |    0    |  /-> |    1    |  /-> |    2    |  
-// |---------| /    |---------| /    |---------| 
+// |    0    |  /-> |    1    |  /-> |    2    |
+// |---------| /    |---------| /    |---------|
 // |       ----     |       ----     |   NULL  |
 // |---------|      |---------|      |---------|
 //
@@ -151,8 +164,8 @@ list_find(struct list_node *head, int value, struct list_node **predp)
 // be as follows:
 //
 // |---------|      |---------|
-// |    0    |  /-> |    2    |  
-// |---------| /    |---------| 
+// |    0    |  /-> |    2    |
+// |---------| /    |---------|
 // |       ----     |   NULL  |
 // |---------|      |---------|
 //
@@ -161,8 +174,8 @@ list_find(struct list_node *head, int value, struct list_node **predp)
 // with the value 1 and the new linked list structure should be as follows:
 //
 // |---------|      |---------|
-// |    1    |  /-> |    2    |  
-// |---------| /    |---------| 
+// |    1    |  /-> |    2    |
+// |---------| /    |---------|
 // |       ----     |   NULL  |
 // |---------|      |---------|
 //
@@ -173,17 +186,29 @@ list_find(struct list_node *head, int value, struct list_node **predp)
 // to the head node if the head node is removed.
 // Hint: An alternative to the above two hints is to use a
 //   pointer-to-a-pointer to iterate over the list. Code that uses a
-//   pointer-to-a-pointer as an iterator is more elegant and 
+//   pointer-to-a-pointer as an iterator is more elegant and
 //   does not need a separate case for removing the head node.
 //
 // Hint: Don't forget to call free_node!
-int
-list_remove(struct list_node **headp, int value)
-{
-	assert(headp != NULL);
-	assert(*headp != NULL);
+int list_remove(struct list_node **headp, int value) {
+  assert(headp != NULL);
+  assert(*headp != NULL);
 
-	// TODO: Your code here.
-	assert(0);
-	return 0;
+  struct list_node *pred;
+
+  struct list_node *node_to_remove = list_find(*headp, value, &pred);
+
+  if (node_to_remove == NULL) {
+    return 0;
+  }
+  if (pred == NULL) {
+    // Remove head
+    *headp = node_to_remove->next;
+  } else {
+    // Remove non-head
+    pred->next = node_to_remove->next;
+  }
+
+  free_node(node_to_remove);
+  return 1;
 }
